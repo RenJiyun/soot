@@ -815,6 +815,7 @@ public class OnFlyCallGraphBuilder {
                     MethodSubSignature subSig = new MethodSubSignature(iie.getMethodRef());
                     addVirtualCallSite(s, m, receiver, iie, new MethodSubSignature(iie.getMethodRef()), Edge.ieToKind(iie));
 
+                    // 仅仅是特殊的处理方式, 可用于相关配置
                     VirtualEdge virtualEdge = virtualEdgeSummaries.getVirtualEdgesMatchingSubSig(subSig);
                     if (virtualEdge != null) {
                         for (VirtualEdgeTarget t : virtualEdge.targets) {
