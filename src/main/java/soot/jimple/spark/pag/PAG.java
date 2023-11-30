@@ -728,6 +728,7 @@ public class PAG implements PointsToAnalysis {
     }
 
     public NewInstanceNode makeNewInstanceNode(Value value, Type type, SootMethod method) {
+        // 在特定的方法中, 指定的 newInstance 表达式抽象为一个节点, 忽略控制流信息
         NewInstanceNode node = newInstToNodeMap.get(value);
         if (node == null) {
             node = new NewInstanceNode(this, value, type);
@@ -936,8 +937,10 @@ public class PAG implements PointsToAnalysis {
         to = to.getReplacement();
         if (from instanceof VarNode) {
             if (to instanceof VarNode) {
+                // 局部变量之间的赋值
                 return addSimpleEdge((VarNode) from, (VarNode) to);
             } else if (to instanceof FieldRefNode) {
+                // 局部变量的值赋给对象的某个字段 (store)
                 return addStoreEdge((VarNode) from, (FieldRefNode) to);
             } else if (to instanceof NewInstanceNode) {
                 return addNewInstanceEdge((VarNode) from, (NewInstanceNode) to);
@@ -945,11 +948,13 @@ public class PAG implements PointsToAnalysis {
                 throw new RuntimeException("Invalid node type");
             }
         } else if (from instanceof FieldRefNode) {
+            // 对象的某个字段的值赋给局部变量 (load)
             return addLoadEdge((FieldRefNode) from, (VarNode) to);
 
         } else if (from instanceof NewInstanceNode) {
             return addAssignInstanceEdge((NewInstanceNode) from, (VarNode) to);
         } else {
+            // 局部变量 = new XXX()
             return addAllocEdge((AllocNode) from, (VarNode) to);
         }
     }
