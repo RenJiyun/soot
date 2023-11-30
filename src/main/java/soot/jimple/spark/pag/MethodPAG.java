@@ -115,6 +115,9 @@ public final class MethodPAG {
         if (src == null) {
             return;
         }
+
+        // 每次取两个, 就可以知道该边
+        // src -> dest: from -> to
         internalEdges.add(src);
         internalEdges.add(dst);
         if (hasBeenAdded) {

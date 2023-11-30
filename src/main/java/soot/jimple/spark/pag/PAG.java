@@ -583,6 +583,8 @@ public class PAG implements PointsToAnalysis {
 
     public AllocNode makeAllocNode(Object newExpr, Type type, SootMethod m) {
         if (opts.types_for_sites() || opts.vta()) {
+            // 用类型, 而不是具体的调用点来抽象对象
+            // 使用类型, 应该会使得模糊度更高
             newExpr = type;
         }
 
