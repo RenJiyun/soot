@@ -151,6 +151,12 @@ public class MethodNodeFactory extends AbstractShimpleValueSwitch {
             }
         }
 
+
+        // 可产生指针流向的语句
+        // 1. 赋值语句
+        // 2. 返回语句
+        // 3. identity 语句 (只是 jimple 设计的需要)
+        // 4. throw 语句
         s.apply(new AbstractStmtSwitch() {
             @Override
             final public void caseAssignStmt(AssignStmt as) {
@@ -298,6 +304,8 @@ public class MethodNodeFactory extends AbstractShimpleValueSwitch {
 
     final public Node caseRet() {
         VarNode ret = pag.makeLocalVarNode(Parm.v(method, PointsToAnalysis.RETURN_NODE), method.getReturnType(), method);
+
+        // return 语句涉及过程间调用分析
         ret.setInterProcSource();
         return ret;
     }
