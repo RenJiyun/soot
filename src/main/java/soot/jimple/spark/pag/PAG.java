@@ -1457,9 +1457,25 @@ public class PAG implements PointsToAnalysis {
     protected CGOptions cgOpts;
     protected ClientAccessibilityOracle accessibilityOracle = Scene.v().getClientAccessibilityOracle();
 
+    /**
+     * 记录局部变量之间赋值引起的指针流向
+     * local_1 = local_2
+     */
     protected Map<VarNode, Object> simple = new HashMap<VarNode, Object>();
+
+    /**
+     * 记录对象字段赋值给局部变量引起的指针流向
+     * local_1 = obj.field
+     */
     protected Map<FieldRefNode, Object> load = new HashMap<FieldRefNode, Object>();
     protected Map<VarNode, Object> store = new HashMap<VarNode, Object>();
+
+    /**
+     * 局部变量 = new XXX()
+     * 其中 value 的类型一般是一个集合类型
+     * 大部分情况下, 不同语句下的 new XXX() 是进行区分的, 但是也存在一些分析方法,
+     * 将所有的 new XXX() 映射到一个节点
+     */
     protected Map<AllocNode, Object> alloc = new HashMap<AllocNode, Object>();
     protected Map<VarNode, Object> newInstance = new HashMap<VarNode, Object>();
     protected Map<NewInstanceNode, Object> assignInstance = new HashMap<NewInstanceNode, Object>();

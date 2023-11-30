@@ -121,6 +121,9 @@ public class PropIter extends Propagator {
      */
     protected boolean handleAllocNode(AllocNode src) {
         boolean ret = false;
+
+        // src 赋值给了 targets 中的元素
+        // 因此 target 的 points-to set 需要加上 src
         Node[] targets = pag.allocLookup(src);
         for (Node element : targets) {
             ret = element.makeP2Set().add(src) | ret;
