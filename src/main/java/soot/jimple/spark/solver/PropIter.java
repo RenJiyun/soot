@@ -63,6 +63,8 @@ public class PropIter extends Propagator {
     public void propagate() {
         final OnFlyCallGraph ofcg = pag.getOnFlyCallGraph();
         new TopoSorter(pag, false).sort();
+
+        // 由 new 表达式, 也就是 AllocNode 作为 points-to set 传播的源头
         for (Object object : pag.allocSources()) {
             handleAllocNode((AllocNode) object);
         }
@@ -176,6 +178,9 @@ public class PropIter extends Propagator {
         boolean ret = false;
         final Node[] loadTargets = pag.loadLookup(src);
         final SparkField f = src.getField();
+
+        // 对象中某个字段的 points-to set 需要结合该字段的 base 的 points-to set 来计算
+        // 不考虑控制流的情况下, base 的 points-to set 可能会非常大
         ret = src.getBase().getP2Set().forall(new P2SetVisitor() {
             public final void visit(Node n) {
                 AllocDotField nDotF = ((AllocNode) n).dot(f);
